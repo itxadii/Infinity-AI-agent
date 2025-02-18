@@ -43,10 +43,16 @@ def speak(text):
 def get_random_greeting():
     """Generate random female-voiced greetings"""
     greetings = [
-        "Hi Infinity here! How can I help you today?",
+        "Hi Infinity here! How can I help you ?",
         "Hello there, what can I do for you?",
         "Hey ! I'm ready to assist you.",
-        "What would you like me to do for you?"
+        "Hey! What's up",
+        "Hi! How can I help?",
+        "Hi! Ready when you are.",
+        "Infinity here!",
+        "Sup? What’s the plan?",
+        "Hi! What’s on your mind?",
+        "Hey! How’s it going?"
     ]
     return random.choice(greetings)
 
@@ -63,10 +69,10 @@ def ask_question(api_key, question):
     data = {
         "model": "gryphe/mythomax-l2-13b",  # Better model choice
         "messages": [
-            {"role": "system", "content": "You are a helpful female assistant. Respond in clear, conversational English."},
+            {"role": "system", "content": "You are a helpful female assistant named Infinity. Respond in clear, conversational English."},
             {"role": "user", "content": question}
         ],
-        "max_tokens": 500,  # Increased token limit
+        "max_tokens": 300,  # Increased token limit
         "temperature": 0.7
     }
     
@@ -113,20 +119,24 @@ def system_commands(command):
 def search_web(query):
     """Perform web search with proper encoding"""
     try:
-        encoded_query = quote(query)
+        # Clean query from search-related keywords
+        clean_query = query.replace('search', '').replace('on', '').replace('web', '').replace('Infinity', '').strip()
+        
+        encoded_query = quote(clean_query)
         search_url = f"https://www.google.com/search?q={encoded_query}"
         webbrowser.open_new_tab(search_url)
-        return f"Showing results for {query}"
+        return f"Showing results for {clean_query}"
     except Exception as e:
         print(f"Search error: {e}")
         return "Sorry darling, I couldn't complete that search"
 
 def play_youtube_music(query):
     """Open YouTube search results for the query"""
-    encoded_query = quote(query)
+    clean_query_yt = query.replace('search', '').replace('on', '').replace('youtube', '').replace('Infinity', '').strip()
+    encoded_query = quote(clean_query_yt)
     url = f"https://www.youtube.com/results?search_query={encoded_query}"
     webbrowser.open_new_tab(url)
-    return f"Searching {query} on YouTube"
+    return f"Searching {clean_query_yt} on YouTube"
 
 def play_local_music(file_path):
     """Play local music files using pygame"""
@@ -137,10 +147,10 @@ def play_local_music(file_path):
         return f"Now playing {os.path.basename(file_path)}"
     except pygame.error as e:
         print(f"Pygame error: {e}")
-        return "Sorry love, I can't find the music file"
+        return "Sorry, I can't find the music file"
     except Exception as e:
         print(f"Music play error: {e}")
-        return "Sorry love, I had trouble playing that"
+        return "Sorry, I had trouble playing that"
 
 def stop_local_music():
     """Stop local music playback"""
@@ -181,22 +191,21 @@ def voice_input(timeout=5):
 
 def trigger_voice_assistant():
     """Main Voice Assistant Workflow"""
-    api_key = os.getenv("API_OPENROUTER")  # Replace with your API key
+    api_key = os.getenv("API_OPENROUTER")
     
     speak(get_random_greeting())
     
     question = voice_input()
     if not question:
-        speak("Sorry, can you repeat that?")
+        speak("Can you please speak clearly ")
         return
 
     print(f"Your request: {question}")
 
-# Handle music commands first
+    # Handle music commands first
     if 'youtube' in question or 'play' in question:
         query = question.replace('youtube', '').replace('play', '').strip()
         if 'local' in query:
-            # Assuming you have a default music directory
             music_directory = "Music"  
             if os.path.exists(music_directory):
                 music_files = [f for f in os.listdir(music_directory) if f.endswith(('.mp3', '.wav', '.ogg'))]
@@ -212,18 +221,28 @@ def trigger_voice_assistant():
             result = play_youtube_music(query)
             speak(result)
         else:
+            # Only loop for follow-up question about what to play
             speak("What would you like me to play, darling?")
+            follow_up = voice_input()
+            if follow_up:
+                result = play_youtube_music(follow_up)
+                speak(result)
         return
 
     # Handle search commands next
-    if 'search' in question:
+    if 'search' in  question:
         parts = question.split('search', 1)
         query = parts[1].strip() if len(parts) > 1 else ''
         if query:
             result = search_web(query)
             speak(result)
         else:
+            # Only loop for follow-up question about search query
             speak("What would you like me to search for, darling?")
+            follow_up = voice_input()
+            if follow_up:
+                result = search_web(follow_up)
+                speak(result)
         return
 
     # Handle system commands
@@ -238,6 +257,14 @@ def trigger_voice_assistant():
     if result.strip():
         speak(result)
         print(f"Assistant: {result}")
+        
+        # Check if AI response contains a question
+        if "?" in result:
+            # Only loop for follow-up to AI questions
+            follow_up = voice_input()
+            if follow_up:
+                result = ask_question(api_key, follow_up)
+                speak(result)
     else:
         speak("Sorry darling, I didn't get a proper response. Could you rephrase that?")
 
