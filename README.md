@@ -35,8 +35,8 @@ Infinity relies on the following packages and libraries (already listed in `requ
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/your-username/infinity.git
-   cd infinity
+   git clone https://github.com/itxadii/Infinity-AI-agent.git
+   
    ```
 
 2. **Create a Virtual Environment (recommended)**
@@ -72,7 +72,7 @@ API_OPENROUTER=YOUR_OPENROUTER_API_KEY
 
 > **Note**:  
 > - Sign up or log in to [Porcupine’s console](https://console.picovoice.ai/) to get your API key.  
-> - Sign up or log in to [OpenRouter](https://openrouter.ai/) to retrieve your API key.
+> - Sign up or log in to [OpenRouter](https://openrouter.ai/) to get your API key.
 
 Once these environment variables are set, they will be loaded by `python-dotenv` at runtime.
 
