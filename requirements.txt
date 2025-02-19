@@ -1,4 +1,4 @@
-pyporcupine
+pvporcupine
 SpeechRecognition
 requests
 PyAudio
