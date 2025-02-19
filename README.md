@@ -62,12 +62,12 @@ Create a file named `.env` in the root of the project (same folder as `infinity.
 
 ```dotenv
 # Porcupine API
-PORCUPINE_API_KEY=YOUR_PORCUPINE_API_KEY
-PORCUPINE_LOGIN_URL=https://console.picovoice.ai
+API_PORCUPINE=YOUR_PORCUPINE_API_KEY
+
 
 # OpenRouter API
-OPENROUTER_API_KEY=YOUR_OPENROUTER_API_KEY
-OPENROUTER_LOGIN_URL=https://openrouter.ai/login
+API_OPENROUTER=YOUR_OPENROUTER_API_KEY
+
 ```
 
 > **Note**:  
