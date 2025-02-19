@@ -1,0 +1,8 @@
+pyporcupine
+SpeechRecognition
+requests
+PyAudio
+pyttsx3
+pygame
+python-dotenv
+
