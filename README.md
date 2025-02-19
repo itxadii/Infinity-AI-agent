@@ -1,4 +1,4 @@
-# Infinity
+# AI Agent - Infinity
 
 Infinity is a voice-enabled assistant that uses [Porcupine](https://picovoice.ai/platform/porcupine/) for wake-word detection and [OpenRouter](https://openrouter.ai/) for advanced language model integrations.
 
